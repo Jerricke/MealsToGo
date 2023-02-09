@@ -1,44 +1,10 @@
-// import React from "react";
-// import { Searchbar } from "react-native-paper";
-// import { StatusBar, StyleSheet, Text, View, SafeAreaView } from "react-native";
-// import { RestaurantInfoCard } from "../components/restaurant-info-card.component";
-// import styled from "styled-components/native";
-
-// const SearchContainer = styled.View`
-//   padding: ${(props) => props.theme.space[3]};
-//   background-color: ${(props) => props.theme.colors.brand.primary};
-// `;
-
-// const SafeArea = styled(SafeAreaView)`
-//   flex: 1;
-//   ${StatusBar.currentheight && `margin-top: ${StatusBar.currentheight}px`}; sdf
-// `;
-// // && says that if "statusbar.currenheight" has a value, then execute _____
-
-// const ListBox = styled.View`
-//   flex: 1;
-//   padding: ${(props) => props.theme.space[3]};
-//   background-color: ${(props) => props.theme.colors.brand.secondary};
-// `;
-// export const RestaurantsScreen = () => {
-//   return (
-//     <SafeArea>
-//       <SearchContainer>
-//         <Searchbar />
-//       </SearchContainer>
-//       <ListBox>
-//         <RestaurantInfoCard />
-//       </ListBox>
-//     </SafeArea>
-//   );
-// };
-
 import React from "react";
 import { Searchbar } from "react-native-paper";
-import { StatusBar, StyleSheet, SafeAreaView, Text, View } from "react-native";
+import { StatusBar, FlatList, SafeAreaView } from "react-native";
 import styled from "styled-components/native";
 
 import { RestaurantInfoCard } from "../components/restaurant-info-card.component";
+import { Spacer } from "../../../components/spacer/spacer.components";
 
 const SafeArea = styled(SafeAreaView)`
   flex: 1;
@@ -49,18 +15,36 @@ const SearchContainer = styled.View`
   padding: ${(props) => props.theme.space[3]};
 `;
 
-const RestaurantListContainer = styled.View`
-  flex: 1;
-  padding: ${(props) => props.theme.space[3]};
-`;
+const RestaurantList = styled(FlatList).attrs({
+  contentContainerStyle: {
+    padding: 16,
+  },
+})``;
 
 export const RestaurantsScreen = () => (
   <SafeArea>
     <SearchContainer>
       <Searchbar />
     </SearchContainer>
-    <RestaurantListContainer>
-      <RestaurantInfoCard />
-    </RestaurantListContainer>
+    <RestaurantList
+      data={[
+        { name: 1 },
+        { name: 2 },
+        { name: 3 },
+        { name: 4 },
+        { name: 5 },
+        { name: 6 },
+        { name: 7 },
+        { name: 8 },
+      ]}
+      renderItem={() => (
+        <>
+          <Spacer position="bottom" size="large">
+            <RestaurantInfoCard />
+          </Spacer>
+        </>
+      )}
+      keyExtractor={(item) => item.name}
+    />
   </SafeArea>
 );
