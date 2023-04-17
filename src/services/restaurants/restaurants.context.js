@@ -1,21 +1,26 @@
-import React, { useState, useEffect, createContext, useMemo } from "react";
+import React, { useContext, useState, createContext, useEffect } from "react";
 
 import {
   restaurantsRequest,
   restaurantsTransform,
 } from "./restaurants.service";
 
-export const RestaurantContext = createContext();
+import { LocationContext } from "../location/location.context";
 
-export const RestaurantContextProvider = ({ children }) => {
+export const RestaurantsContext = createContext();
+
+export const RestaurantsContextProvider = ({ children }) => {
   const [restaurants, setRestaurants] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { location } = useContext(LocationContext);
 
-  const retrieveRestaurants = () => {
+  const retrieveRestaurants = (loc) => {
     setIsLoading(true);
+    setRestaurants([]);
+
     setTimeout(() => {
-      restaurantsRequest()
+      restaurantsRequest(loc)
         .then(restaurantsTransform)
         .then((results) => {
           setIsLoading(false);
@@ -28,11 +33,14 @@ export const RestaurantContextProvider = ({ children }) => {
     }, 2000);
   };
   useEffect(() => {
-    retrieveRestaurants();
-  }, []);
+    if (location) {
+      const locationString = `${location.lat},${location.lng}`;
+      retrieveRestaurants(locationString);
+    }
+  }, [location]);
 
   return (
-    <RestaurantContext.Provider
+    <RestaurantsContext.Provider
       value={{
         restaurants,
         isLoading,
@@ -40,6 +48,6 @@ export const RestaurantContextProvider = ({ children }) => {
       }}
     >
       {children}
-    </RestaurantContext.Provider>
+    </RestaurantsContext.Provider>
   );
 };
